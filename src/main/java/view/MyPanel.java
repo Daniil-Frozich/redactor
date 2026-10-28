@@ -104,7 +104,8 @@ public class MyPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.toggleShape();
-                if (controller.isRectangle) {
+                // Обращаемся к переменной через модель внутри контроллера
+                if (controller.model.isRectangle) {
                     t1.setText("Figura: Rectangle");
                 } else {
                     t1.setText("Figura: Ellipse");
@@ -112,6 +113,7 @@ public class MyPanel extends JPanel {
                 repaint();
             }
         });
+
 
         // Кнопка очистки холста
         clearButton.addActionListener(new ActionListener() {
