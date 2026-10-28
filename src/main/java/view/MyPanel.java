@@ -1,91 +1,105 @@
-package controller;
+package view;
 
-import model.MyShape;
-import view.MyFrame;
-import view.MyPanel;
+import controller.Controller;
 
+import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
-import java.awt.geom.RectangularShape;
-import java.util.ArrayList;
+import java.awt.event.*;
 
-public class Controller {
-    MyPanel myPanel;
-    MyFrame myFrame;
-    public Point2D[] points;
-    Rectangle2D rectangle2D;
-    Ellipse2D ellipse2D;
-    RectangularShape currentShape;
-    private boolean isRectangle = true;
+public class MyPanel extends JPanel {
+    JTextField t1;
+    JTextField t2;
+    JButton button;       // Меняет цвет
+    JButton dogbutton;    // Меняет заливку
+    JButton switchButton; // Переключает фигуру
 
-    // Новые простые переменные для цвета и заливки
-    public Color currentColor = Color.BLACK;
-    public boolean isFilled = true;
+    Controller controller;
 
-    // Список, куда студент складывает все готовые фигуры
-    public ArrayList<MyShape> list = new ArrayList<>();
+    public MyPanel(Controller controller) {
+        this.controller = controller;
 
-    public Controller() {
-        rectangle2D = new Rectangle2D.Double();
-        ellipse2D = new Ellipse2D.Double();
-        currentShape = rectangle2D;
-        points = new Point2D[2];
-        myPanel = new MyPanel(this);
-        myFrame = new MyFrame(myPanel);
-    }
+        t1 = new JTextField("", 10);
+        t2 = new JTextField("", 10);
+        button = new JButton("Pomenat Cvet");
+        dogbutton = new JButton("Zalivka Vkl/Vykl");
+        switchButton = new JButton("Perecluchit");
 
-    public void mousePressed(Point point) {
-        points[0] = point;
-        points[1] = point;
-    }
+        add(t1);
+        add(t2);
+        add(button);
+        add(dogbutton);
+        add(switchButton);
 
-    public void mouseDragged(Point point) {
-        points[1] = point;
-    }
+        this.setBackground(Color.LIGHT_GRAY);
 
-    // Этот метод вызывается в самом конце рисования фигуры
-    public void mouseReleased() {
-        if (points[0] != null && points[1] != null) {
-            currentShape.setFrameFromDiagonal(points[0], points[1]);
-
-            // Создаем новую фигуру и запоминаем её настройки
-            MyShape newShape = new MyShape(currentShape, currentColor, isFilled);
-            list.add(newShape);
-
-            // Стираем временные точки, чтобы не дублировать
-            points[0] = null;
-            points[1] = null;
-        }
-    }
-
-    public void toggleShape(){
-        isRectangle = !isRectangle;
-        currentShape = isRectangle ? rectangle2D : ellipse2D;
-    }
-
-    public void draw(Graphics2D g2) {
-        // 1. Рисуем циклом всё, что мы сохранили в список ранее
-        for (int i = 0; i < list.size(); i++) {
-            MyShape s = list.get(i);
-            g2.setColor(s.color);
-            if (s.isFilled) {
-                g2.fill(s.shape);
-            } else {
-                g2.draw(s.shape);
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                super.mousePressed(e);
+                controller.mousePressed(e.getPoint());
             }
-        }
 
-        // 2. Рисуем ту фигуру, которую прямо сейчас тащим мышкой
-        if (points[0] != null && points[1] != null) {
-            currentShape.setFrameFromDiagonal(points[0], points[1]);
-            g2.setColor(currentColor);
-            if (isFilled) {
-                g2.fill(currentShape);
-            } else {
-                g2.draw(currentShape);
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                super.mouseReleased(e);
+                // Когда отпускаем мышку — сохраняем фигуру в список
+                controller.mouseReleased();
+                repaint();
             }
-        }
+        });
+
+        addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                super.mouseDragged(e);
+                controller.mouseDragged(e.getPoint());
+                repaint();
+            }
+        });
+
+        // Кнопка переключения цвета (Черный -> Красный -> Синий -> Черный)
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (controller.currentColor == Color.BLACK) {
+                    controller.currentColor = Color.RED;
+                    t1.setText("Cvet: Krasny");
+                } else if (controller.currentColor == Color.RED) {
+                    controller.currentColor = Color.BLUE;
+                    t1.setText("Cvet: Siniy");
+                } else {
+                    controller.currentColor = Color.BLACK;
+                    t1.setText("Cvet: Cherny");
+                }
+            }
+        });
+
+        // Кнопка включения и выключения заливки фигуры
+        dogbutton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.isFilled = !controller.isFilled; // меняет true на false и наоборот
+                if (controller.isFilled) {
+                    t2.setText("Zalivka: VKL");
+                } else {
+                    t2.setText("Zalivka: VYKL");
+                }
+            }
+        });
+
+        switchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.toggleShape();
+                repaint();
+            }
+        });
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2 = (Graphics2D) g;
+        controller.draw(g2);
     }
 }
