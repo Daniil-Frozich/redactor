@@ -7,36 +7,36 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class MyPanel extends JPanel {
-    JTextField t1; // Для фигуры
-    JTextField t2; // Для заливки
-    JTextField t3; // НОВОЕ ПОЛЕ: Для цвета
+    JTextField t1;
+    JTextField t2;
+    JTextField t3;
 
-    JButton button;       // Меняет цвет
-    JButton dogbutton;    // Меняет заливку
-    JButton switchButton; // Переключает фигуру
-    JButton clearButton;  // Очищает поле
+    JButton button;
+    JButton dogbutton;
+    JButton switchButton;
+    JButton clearButton;
 
     Controller controller;
 
     public MyPanel(Controller controller) {
         this.controller = controller;
 
-        // Создаем текстовые поля с начальным текстом
+
         t1 = new JTextField("Figura: Rectangle", 12);
         t2 = new JTextField("Zalivka: VKL", 10);
-        t3 = new JTextField("Cvet: Cherny", 10); // Инициализируем новое поле цвета
+        t3 = new JTextField("Cvet: Cherny", 10);
 
         button = new JButton("Pomenat Cvet");
         dogbutton = new JButton("Zalivka Vkl/Vykl");
         switchButton = new JButton("Perecluchit");
         clearButton = new JButton("Ochistit");
 
-        // Добавляем все три поля на панель
+
         add(t1);
         add(t2);
-        add(t3); // Добавили поле цвета на экран
+        add(t3);
 
-        // Добавляем кнопки
+
         add(button);
         add(dogbutton);
         add(switchButton);
@@ -44,7 +44,7 @@ public class MyPanel extends JPanel {
 
         this.setBackground(Color.LIGHT_GRAY);
 
-        // Обработка мышки (нажатие, отпускание, перемещение)
+        // Обработка мышки
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -69,7 +69,7 @@ public class MyPanel extends JPanel {
             }
         });
 
-        // Кнопка изменения цвета (теперь пишет изменения строго в свое поле t3)
+        // Кнопка изменения цвета
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -86,7 +86,7 @@ public class MyPanel extends JPanel {
             }
         });
 
-        // Кнопка изменения заливки (пишет строго в t2)
+        // Кнопка изменения заливки
         dogbutton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -99,12 +99,12 @@ public class MyPanel extends JPanel {
             }
         });
 
-        // Кнопка переключения фигуры (пишет строго в t1)
+        // Кнопка переключения фигуры
         switchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.toggleShape();
-                // Обращаемся к переменной через модель внутри контроллера
+
                 if (controller.model.isRectangle) {
                     t1.setText("Figura: Rectangle");
                 } else {

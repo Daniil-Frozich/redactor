@@ -11,10 +11,9 @@ public class Model {
     // Список всех нарисованных фигур
     public ArrayList<MyShape> list = new ArrayList<>();
 
-    // Массив точек для рисования
     public Point2D[] points;
 
-    // Шаблоны фигур
+
     Rectangle2D rectangle2D;
     Ellipse2D ellipse2D;
     RectangularShape currentShape;
@@ -56,7 +55,7 @@ public class Model {
     }
 
     public void draw(Graphics2D g2, Color currentColor, boolean isFilled) {
-        // 1. Рисуем старые фигуры из списка
+        // Рисуем старые фигуры из списка
         for (int i = 0; i < list.size(); i++) {
             MyShape s = list.get(i);
             g2.setColor(s.color);
@@ -67,7 +66,7 @@ public class Model {
             }
         }
 
-        // 2. Рисуем фигуру, которую тянем прямо сейчас
+        // Рисуем фигуру, которую тянем
         if (points[0] != null && points[1] != null) {
             currentShape.setFrameFromDiagonal(points[0], points[1]);
             g2.setColor(currentColor);

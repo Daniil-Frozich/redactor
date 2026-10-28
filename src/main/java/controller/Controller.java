@@ -1,6 +1,6 @@
 package controller;
 
-import model.Model; // Импортируем модель
+import model.Model;
 import view.MyFrame;
 import view.MyPanel;
 
@@ -10,7 +10,7 @@ public class Controller {
     MyPanel myPanel;
     MyFrame myFrame;
 
-    // Объект модели, куда переехал весь ваш код
+
     public Model model;
 
     // Текущие цвета и настройки
@@ -23,7 +23,6 @@ public class Controller {
         myFrame = new MyFrame(myPanel);
     }
 
-    // Методы мыши просто вызывают такие же методы внутри модели
     public void mousePressed(Point point) {
         model.mousePressed(point);
     }
@@ -33,7 +32,6 @@ public class Controller {
     }
 
     public void mouseReleased() {
-        // Передаем текущий цвет и флаг заливки в модель для сохранения
         model.mouseReleased(currentColor, isFilled);
     }
 

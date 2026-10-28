@@ -9,7 +9,7 @@ public class MyShape {
     public boolean isFilled; // true - закрашенная, false - пустая
 
     public MyShape(RectangularShape shape, Color color, boolean isFilled) {
-        // Делаем копию фигуры (.clone()), чтобы старые фигуры не двигались за мышкой
+        // Делаем копию фигуры, чтобы старые фигуры не двигались за мышкой
         this.shape = (RectangularShape) shape.clone();
         this.color = color;
         this.isFilled = isFilled;
